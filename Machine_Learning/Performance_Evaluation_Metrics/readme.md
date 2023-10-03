@@ -10,6 +10,9 @@
     - [Root Mean Squared Error(RMSE)](#root-mean-squared-errorrmse)
     - [R²](#r)
     - [Adjusted R²](#adjusted-r)
+  - [Sınıflandırma Modellerinin Değerlendirilmesi](#sınıflandırma-modellerinin-değerlendirilmesi)
+    - [Confusion Matrix(Karışıklık Matrisi)](#confusion-matrixkarışıklık-matrisi)
+    - [AUC-ROC CURVE](#auc-roc-curve)
   - [Referanslar](#referanslar)
 
 ## Giriş
@@ -119,7 +122,104 @@ Bu tarz problemlere çözüm olması için Ayarlanmış R-kare devreye girer. Ay
 adj_r2 = 1-(1-R2)*(n-1)/(n-p-1)
 ```
 
+## Sınıflandırma Modellerinin Değerlendirilmesi
 
+### Confusion Matrix(Karışıklık Matrisi)
+
+Makine öğrenimi sınıflandırma problemi için bir performans ölçümüdür. Öngörülen ve gerçek değerlerin 4 farklı kombinasyonunu içeren bir tablodur.
+
+![](photo/7.PNG)
+
+Karışıklık matrisinde, bilmeniz gereken bazı terimler vardır. Bunlar daha sonra çeşitli metrikleri hesaplamak için kullanılabilir. Bu terimleri size basit bir şekilde şöyle söyleyebilirim.
+
+> TP (True positive — Doğru Pozitif): Hastaya hasta demek.
+
+> FP (False positive — Yanlış Pozitif): Hasta olmayana hasta demek.
+
+> TN (True negative — Doğru Negatif): Hasta olmayana hasta değil demek.
+
+> FN (False negative — Yanlış Negatif): Hasta olana hasta değil demek.
+
+Yandaki karmaşık matrisinin hasta olan ve hasta olmayan insanların sınıflandırılması olarak düşünelim. Görülmektedir ki oluşturulan model 27 tane hastalığı olmayan kişinin 24 tanesini doğru bilmekte iken hasta olan 34 hastanın da 31 tanesinin hasta olduğunu doğru bir şekilde tahmin edebilmiştir.
+
+Bu şekilde karmaşıklık matrisinden modelimizin performansını açıklayabiliriz.
+
+Yukarıdaki terimler ile hesaplayabileceğimiz bazı metrikler vardır.
+
+![](photo/8.PNG)
+
+**Doğruluk(Accuracy)**, doğru olarak sınıflandırılan örneklerin yüzdesidir.
+
+**Duyarlılık(Recall)**, pozitif olarak tahmin etmemiz gereken işlemlerin ne kadarını pozitif olarak tahmin ettiğimizi gösteren bir metriktir. “Gerçek pozitiflerin ne kadarı doğru bir şekilde tanımlandı?”
+
+**Kesinlik(precision)**, pozitif olarak tahminlediğimiz değerlerin gerçekten kaç adedinin pozitif olduğunu göstermektedir.
+
+Kesinlik ve Duyarlılık tanım olarak birbirine çok benzemektedir ve bu karışıklığa sebep olabilir. Aralarındaki farkı çok güzel bir şekilde gösteren diyagrama bakalım.
+
+![](photo/9.PNG)
+
+```py
+# Confusion Matrix
+from sklearn.metrics import confusion_matrix
+confusion_matrix(y_true, y_pred)
+# Accuracy
+from sklearn.metrics import accuracy_score
+accuracy_score(y_true, y_pred)
+# Recall
+from sklearn.metrics import recall_score
+recall_score(y_true, y_pred, average=None)
+# Precision
+from sklearn.metrics import precision_score
+precision_score(y_true, y_pred, average=None)
+```
+
+**F1 skoru**, bir testin doğruluğunun bir ölçüsüdür —kesinlik ve duyarlılığın harmonik ortalamasıdır. Maksimum 1 (mükemmel kesinlik ve duyarlılık) ve minimum 0'a sahip olabilir. Genel olarak, modelinizin kesinliğinin ve sağlamlığının bir ölçüsüdür. Örneğin iki modeli düşük kesinlik ve yüksek duyarlılık ile karşılaştırmak zordur veya tersi de geçerlidir. Bu yüzden onları karşılaştırılabilir hale getirmek için F1 Skoru kullanıyoruz.
+
+![](photo/10.PNG)
+
+```py
+# Yöntem 1: sklearn
+from sklearn.metrics import f1_score
+f1_score(y_true, y_pred, average=None)
+# Yöntem 2: Manuel Hesaplama
+F1 = 2 * (precision * recall) / (precision + recall)
+```
+
+### AUC-ROC CURVE
+
+AUC — ROC eğrisi çeşitli eşik ayarlarında sınıflandırma problemi için bir performans ölçümüdür. ROC bir olasılık eğrisidir ve AUC ayrılabilirliğin derecesini veya ölçüsünü temsil eder. AUC, ROC eğrisinin altında kalan alandır. Modelleri sınıflar arasında ne kadar ayırt edebildiğini anlatır. AUC yükseldikçe, model tahmin etmede daha iyi demektir. Örneğin, AUC ne kadar yüksekse, model hastalığı olan ve olmayan hastaları ayırt etmekte daha iyidir.
+
+> Eşikler probleme bağlıdır ve bu nedenle probleme göre ayarlamanız gereken değerlerdir.
+
+Bilmemiz gereken iki önemli terim vardır.
+
+**Gerçek Pozitif Oran (Hassasiyet)**: Gerçek Pozitif Oran(TPR), tüm pozitif veri noktalarına göre pozitif olarak kabul edilen pozitif veri noktalarının oranına karşılık gelir.
+
+> Örneğin, Hassasiyet bize kalp hastalığı olan insanların yüzde kaçının gerçekte doğru olarak tanımlandığını söyler.
+
+![](photo/11.PNG)
+
+**Yanlış Pozitif Oran (Özgüllük)**: Yanlış Pozitif Oran(FPR), tüm negatif veri noktalarına göre yanlışlıkla pozitif olarak kabul edilen negatif veri noktalarının oranına karşılık gelir.
+
+> Örneğin, Özgüllük bize kalp hastalığı olmayan insanların yüzde kaçının gerçekte doğru bir şekilde tanımlandığını söyler.
+
+![](photo/12.PNG)
+
+![](photo/13.PNG)
+
+Yukarıdaki grafikte kırmızı dağılım, hastalığı olmayan tüm hastaları ve yeşil dağılım, hastalığı olan tüm hastaları temsil etsin. Sınıflandırma eşik değerimizi de 0.5 olarak varsayalım.
+
+Eşiğin üzerindeki tüm pozitif değerler “Gerçek Pozitifler(TP)” ve eşiğin üzerindeki negatif değerler, pozitif olarak yanlış tahmin edildiği için “Yanlış Pozitif(FP)” olacaktır.
+
+Eşiğin altındaki tüm negatif değerler “Gerçek Negatifler(TN)” ve eşiğin altındaki pozitif değerler, negatif olarak yanlış tahmin edildiği için “Yanlış Negatif(FN)” olacaktır.
+
+![](photo/14.PNG)
+
+Eşik değerimizi 0.5’ten 0.6’ya çekelim. Açıkça görülmektedir ki sınıflandırma eşiğini yükseltmek, daha fazla öğeyi ‘hasta olmayan’ olarak sınıflandırır, böylece hem Yanlış Pozitifleri hem de Gerçek Pozitifleri düşürür.
+
+> Pozitifleri doğru bir şekilde tanımlamak bizim için önemliyse, daha yüksek Hassasiyetli bir model seçmeliyiz. Bununla birlikte, negatifleri doğru bir şekilde tanımlamak daha önemliyse, ölçüm metriği olarak Özgüllüğü seçmeliyiz.
+
+![](photo/15.PNG)
 
 ## Referanslar
 
