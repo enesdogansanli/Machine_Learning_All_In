@@ -8,8 +8,6 @@
 - [Regresyon Türleri](#regresyon-türleri)
   - [Basit doğrusal regresyon](#basit-doğrusal-regresyon)
   - [Çoklu doğrusal regresyon](#çoklu-doğrusal-regresyon)
-  - [Lojistik regresyon](#lojistik-regresyon)
-- [Gradient Descent](#gradient-descent)
 - [Referanslar](#referanslar)
 
 # Tanımlama
@@ -66,22 +64,7 @@ Tahmin unsuru değişkenlerinin sayısı arttıkça, β sabitleri de buna bağl�
 * Kalp hastalığında diyet ve egzersiz
 * Ücret artışı ve konut kredisi oranlarında enflasyon
 
-## Lojistik regresyon
-
-Veri bilimcileri, bir olayın meydana gelme olasılığını ölçmek için lojistik regresyonu kullanır. Tahmin, 0 ile 1 arasında bir değerdir; burada 0, gerçekleşmesi muhtemel olmayan bir olayı gösterir ve 1, bunun gerçekleşme olasılığının maksimum olduğunu gösterir. Lojistik denklemler, regresyon çizgisini hesaplamak için logaritmik fonksiyonları kullanır.
-
-Şunlar birkaç örnektir:
-
-* Bir spor karşılaşmasında galibiyet veya mağlubiyet olasılığı
-* Bir testi geçme veya testte başarısız olma olasılığı 
-* Bir görüntünün meyve veya hayvan olma olasılığı
-
-# Gradient Descent
-
-
-
 # Referanslar
 
 * https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html
 * https://aws.amazon.com/tr/what-is/linear-regression/
-* 
