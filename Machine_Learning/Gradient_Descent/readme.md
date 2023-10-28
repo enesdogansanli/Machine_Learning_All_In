@@ -7,6 +7,8 @@
   - [İşlem adımları](#i̇şlem-adımları)
   - [Stochastic Gradient Descent](#stochastic-gradient-descent)
   - [Mini-Batch Gradient Descent](#mini-batch-gradient-descent)
+  - [Basic Example](#basic-example)
+    - [Example Code](#example-code)
   - [Referanslar](#referanslar)
 
 ## Giriş
@@ -59,6 +61,61 @@ Veri seti içerisinden rastgele alınan örneklemler ile öğrenir. Diğer ikisi
 
 ![Gradient](photo/8.PNG)
 
+## Basic Example
+
+![Gradient](photo/10.PNG)
+
+![Gradient](photo/9.PNG)
+
+> f(x) = x^2
+
+> f'(x) = 2x
+
+> Start Point = 3
+
+> Learning Rate = 0.1
+
+### Example Code
+
+```py
+import numpy as np
+from typing import Callable
+
+
+def gradient_descent(start: float, gradient: Callable[[float], float],
+                     learn_rate: float, max_iter: int, tol: float = 0.01):
+    x = start
+    steps = [start]  # history tracking
+
+    for _ in range(max_iter):
+        diff = learn_rate*gradient(x)
+        if np.abs(diff) < tol:
+            break
+        x = x - diff
+        steps.append(x)  # history tracing
+  
+    return steps, x
+```
+
+![Gradient](photo/11.PNG)
+
+
+```py
+def func1(x:float):
+    return x**2-4*x+1
+
+def gradient_func1(x:float):
+    return 2*x - 4
+```
+
+```
+history, result = gradient_descent(9, gradient_func1, 0.1, 100)
+```
+
+![Gradient](photo/12.PNG)
+
+
 ## Referanslar
 
 * https://medium.com/deep-learning-turkiye/gradient-descent-nedir-3ec6afcb9900
+* https://towardsdatascience.com/gradient-descent-algorithm-a-deep-dive-cf04e8115f21
